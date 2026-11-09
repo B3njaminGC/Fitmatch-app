@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,9 +58,17 @@ class AppState extends ChangeNotifier {
     _guardarFavs();
   }
 
+  Future<void> _borrarArchivo(String? path) async {
+    if (path == null) return;
+    try {
+      await File(path).delete();
+    } catch (_) {}
+  }
+
   void guardarProducto(Producto p) {
     final i = propios.indexWhere((x) => x.id == p.id);
     if (i >= 0) {
+      if (propios[i].foto != p.foto) _borrarArchivo(propios[i].foto);
       propios[i] = p;
     } else {
       propios.add(p);
@@ -69,6 +78,9 @@ class AppState extends ChangeNotifier {
   }
 
   void borrarProducto(int id) {
+    for (final p in propios.where((x) => x.id == id)) {
+      _borrarArchivo(p.foto);
+    }
     propios.removeWhere((x) => x.id == id);
     favoritos.remove(id);
     _guardarPropios();

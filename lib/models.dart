@@ -181,6 +181,9 @@ class Producto {
   /// true si la cargó el usuario desde la app (se puede editar y borrar).
   final bool propio;
 
+  /// Ruta de la foto guardada en el teléfono (opcional).
+  final String? foto;
+
   const Producto({
     required this.id,
     required this.marca,
@@ -192,6 +195,7 @@ class Producto {
     required this.color,
     required this.tallas,
     this.propio = false,
+    this.foto,
   });
 
   Map<String, dynamic> toJson() => {
@@ -203,6 +207,7 @@ class Producto {
         'tipo': tipo.name,
         'corte': corte.name,
         'color': color,
+        'foto': foto,
         'tallas': tallas.map((t) => t.toJson()).toList(),
       };
 
@@ -219,5 +224,6 @@ class Producto {
             .map((e) => Talla.fromJson(e as Map<String, dynamic>))
             .toList(),
         propio: true,
+        foto: j['foto'] as String?,
       );
 }

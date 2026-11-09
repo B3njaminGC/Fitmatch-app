@@ -81,16 +81,16 @@ class MisPrendasScreen extends StatelessWidget {
                   decoration: tarjeta(),
                   child: ListTile(
                     contentPadding: const EdgeInsets.fromLTRB(12, 6, 4, 6),
-                    leading: Container(
-                      width: 48,
-                      height: 54,
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Color(p.color).withAlpha(45),
-                        borderRadius: BorderRadius.circular(12),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: SizedBox(
+                        width: 48,
+                        height: 54,
+                        child: ColoredBox(
+                          color: Color(p.color).withAlpha(45),
+                          child: ProductImage(p, padding: 6),
+                        ),
                       ),
-                      child: CustomPaint(
-                          painter: GarmentIcon(p.tipo, Color(p.color))),
                     ),
                     title: Text(p.nombre,
                         maxLines: 1,

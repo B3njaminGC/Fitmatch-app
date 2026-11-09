@@ -46,7 +46,7 @@ Cada compilación deja el APK en la sección **Releases** del repo: lo descargá
 - **Probador**: maniquí gris con tus proporciones, la prenda encima, giro con el dedo, cambio de talle en vivo.
 - **Para vos**: consejos según contextura y estatura.
 - **Perfil**: editás tus medidas cuando quieras.
-- **Mis prendas** (Perfil → Mis prendas): cargás tus propias prendas con marca, precio, corte, color y tabla de talles. Se guardan en el teléfono.
+- **Mis prendas** (Perfil → Mis prendas): cargás tus propias prendas con foto (cámara o galería), marca, precio, corte, color y tabla de talles. Se guardan en el teléfono.
 
 ## Veredicto
 

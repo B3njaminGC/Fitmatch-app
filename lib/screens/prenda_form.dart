@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../catalog.dart';
 import '../models.dart';
@@ -68,6 +72,9 @@ class _PrendaFormState extends State<PrendaForm> {
   late int _color;
   late List<_Fila> _filas;
   final List<_Fila> _viejas = [];
+  String? _foto;
+  final List<String> _tmp = []; // fotos creadas en esta sesión
+  bool _guardado = false;
 
   @override
   void initState() {
@@ -80,11 +87,16 @@ class _PrendaFormState extends State<PrendaForm> {
     _tipo = e?.tipo ?? Tipo.remera;
     _corte = e?.corte ?? Corte.regular;
     _color = e?.color ?? _paleta.first;
+    _foto = e?.foto;
     _filas = [for (final t in (e?.tallas ?? tallasEstandar(_tipo))) _Fila(t)];
   }
 
   @override
   void dispose() {
+    for (final p in _tmp) {
+      if (_guardado && p == _foto) continue;
+      File(p).delete().then((_) {}, onError: (_) {});
+    }
     for (final c in [_marca, _nombre, _precio, _desc]) {
       c.dispose();
     }
@@ -95,6 +107,79 @@ class _PrendaFormState extends State<PrendaForm> {
     }
     super.dispose();
   }
+
+  Future<void> _elegirFoto(ImageSource src) async {
+    try {
+      final x = await ImagePicker()
+          .pickImage(source: src, maxWidth: 1200, imageQuality: 80);
+      if (x == null) return;
+      final dir = await getApplicationDocumentsDirectory();
+      final carpeta = Directory('${dir.path}/fotos');
+      if (!await carpeta.exists()) await carpeta.create(recursive: true);
+      final dest =
+          '${carpeta.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await File(x.path).copy(dest);
+      if (!mounted) return;
+      setState(() {
+        _tmp.add(dest);
+        _foto = dest;
+      });
+    } catch (e) {
+      if (mounted) _error('No se pudo cargar la foto: $e');
+    }
+  }
+
+  Widget _fotoUi() => Container(
+        height: 210,
+        decoration: tarjeta(),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: _foto == null
+                  ? const Center(
+                      child: Icon(Icons.image_outlined,
+                          size: 52, color: Color(0xFFB0B3B8)))
+                  : Image.file(File(_foto!),
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Center(
+                          child: Icon(Icons.broken_image_outlined))),
+            ),
+            Positioned(
+              left: 8,
+              right: 8,
+              bottom: 8,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      onPressed: () => _elegirFoto(ImageSource.camera),
+                      icon: const Icon(Icons.photo_camera_outlined),
+                      label: const Text('Cámara'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      onPressed: () => _elegirFoto(ImageSource.gallery),
+                      icon: const Icon(Icons.photo_library_outlined),
+                      label: const Text('Galería'),
+                    ),
+                  ),
+                  if (_foto != null) ...[
+                    const SizedBox(width: 8),
+                    IconButton.filledTonal(
+                      tooltip: 'Quitar foto',
+                      onPressed: () => setState(() => _foto = null),
+                      icon: const Icon(Icons.delete_outline),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   void _cambiarTipo(Tipo t) {
     if (t == _tipo) return;
@@ -184,7 +269,9 @@ class _PrendaFormState extends State<PrendaForm> {
       color: _color,
       tallas: tallas,
       propio: true,
+      foto: _foto,
     ));
+    _guardado = true;
     Navigator.of(context).pop();
   }
 
@@ -329,6 +416,9 @@ class _PrendaFormState extends State<PrendaForm> {
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
         children: [
+          _titulo('Foto',
+              'Es solo para mostrarla en la tienda. El color de más abajo es el que se usa en el maniquí.'),
+          _fotoUi(),
           _titulo('Tipo de prenda',
               'Si cambiás el tipo se reinicia la tabla de talles.'),
           Wrap(

@@ -32,50 +32,49 @@ class _DetalleScreenState extends State<DetalleScreen> {
           return ListView(
             padding: EdgeInsets.zero,
             children: [
-              Container(
+              SizedBox(
                 height: 300,
-                color: color.withAlpha(45),
-                child: SafeArea(
-                  bottom: false,
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(36),
-                          child: AspectRatio(
-                            aspectRatio: 0.85,
-                            child: CustomPaint(
-                                painter: GarmentIcon(prod.tipo, color)),
-                          ),
-                        ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: ColoredBox(
+                        color: color.withAlpha(45),
+                        child: ProductImage(prod, padding: 36),
                       ),
-                      Positioned(
-                        top: 8,
-                        left: 12,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back, size: 20),
-                            onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    SafeArea(
+                      bottom: false,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 8,
+                            left: 12,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: IconButton(
+                                icon: const Icon(Icons.arrow_back, size: 20),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 8,
-                        right: 12,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: Icon(
-                                fav ? Icons.favorite : Icons.favorite_border,
-                                size: 20,
-                                color: fav ? Colors.redAccent : Colors.black87),
-                            onPressed: () => appState.toggleFav(prod.id),
+                          Positioned(
+                            top: 8,
+                            right: 12,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: IconButton(
+                                icon: Icon(
+                                    fav ? Icons.favorite : Icons.favorite_border,
+                                    size: 20,
+                                    color: fav ? Colors.redAccent : Colors.black87),
+                                onPressed: () => appState.toggleFav(prod.id),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Padding(

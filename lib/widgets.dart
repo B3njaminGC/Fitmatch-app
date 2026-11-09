@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'fit.dart';
@@ -322,16 +324,7 @@ class ProductCard extends StatelessWidget {
                 color: color.withAlpha(45),
                 child: Stack(
                   children: [
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(22),
-                        child: AspectRatio(
-                          aspectRatio: 0.85,
-                          child: CustomPaint(
-                              painter: GarmentIcon(prod.tipo, color)),
-                        ),
-                      ),
-                    ),
+                    Positioned.fill(child: ProductImage(prod)),
                     Positioned(top: 8, right: 8, child: FitBadge(r.veredicto)),
                     Positioned(
                       top: 0,
@@ -445,6 +438,37 @@ class TipoChips extends StatelessWidget {
           for (final t in Tipo.values) chip(t.plural, t),
         ],
       ),
+    );
+  }
+}
+
+/// Foto de la prenda si tiene; si no, la ilustración plana con su color.
+class ProductImage extends StatelessWidget {
+  const ProductImage(this.prod, {super.key, this.padding = 22});
+  final Producto prod;
+  final double padding;
+
+  Widget _icono() => Center(
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: AspectRatio(
+            aspectRatio: 0.85,
+            child: CustomPaint(
+                painter: GarmentIcon(prod.tipo, Color(prod.color))),
+          ),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final f = prod.foto;
+    if (f == null) return _icono();
+    return Image.file(
+      File(f),
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      errorBuilder: (_, __, ___) => _icono(),
     );
   }
 }
