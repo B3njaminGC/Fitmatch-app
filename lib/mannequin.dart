@@ -76,7 +76,11 @@ class MannequinPainter extends CustomPainter {
     final front = math.cos(angle) >= 0;
 
     double y(double cm) => top + cm * s;
-    double hw(double circ) => 0.5 * circ * (0.36 * c + 0.25 * sn) * s;
+    // Ancho aparente de una sección elíptica (a = ancho, b = profundidad)
+    // vista con el giro actual: sin "hinchazón" a mitad del giro.
+    double ell(double a, double b) =>
+        math.sqrt(math.pow(a * c, 2) + math.pow(b * sn, 2));
+    double hw(double circ) => 0.5 * circ * ell(0.36, 0.25) * s;
 
     // Alturas (cm desde la cabeza)
     final yNeck = h * 0.165;
@@ -90,7 +94,7 @@ class MannequinPainter extends CustomPainter {
     final yFloor = h;
 
     // Anchos del cuerpo (px, mitad)
-    final shHalf = 0.5 * (p.pecho * 0.42 * c + p.pecho * 0.24 * sn) * s;
+    final shHalf = 0.5 * p.pecho * ell(0.42, 0.24) * s;
     final bustHalf = hw(p.pecho);
     final waistHalf = hw(p.cintura);
     final hipHalf = hw(p.cadera);
@@ -111,7 +115,7 @@ class MannequinPainter extends CustomPainter {
     );
 
     Path legPath(double lx, double e, double yEnd) {
-      double lh(double circ) => 0.5 * circ * (0.32 * c + 0.30 * sn) * s + e;
+      double lh(double circ) => 0.5 * circ * ell(0.32, 0.30) * s + e;
       final t = lh(thigh), k = lh(knee), a = lh(ankle);
       final yt = y(yCrotch) - 8 * s;
       return _smooth([
@@ -219,7 +223,7 @@ class MannequinPainter extends CustomPainter {
     final ry = h * 0.065 * s;
     final headRect = Rect.fromCenter(
         center: Offset(cx, y(h * 0.065)),
-        width: ry * 2 * (0.78 * c + 0.95 * sn),
+        width: ry * 2 * ell(0.78, 0.95),
         height: ry * 2);
     canvas.drawOval(headRect, _fill(_skin, headRect));
     canvas.drawOval(headRect, _line(_skinDark, 0.8));
