@@ -25,6 +25,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _siguiente() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (_paso < 2) {
       setState(() => _paso++);
       _ctl.animateToPage(_paso,

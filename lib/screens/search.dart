@@ -37,6 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return SafeArea(
       bottom: false,
       child: CustomScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         slivers: [
           SliverToBoxAdapter(
             child: Padding(

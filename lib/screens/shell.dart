@@ -89,7 +89,8 @@ class _ShellState extends State<Shell> {
           PerfilScreen(),
         ];
         return Scaffold(
-          body: IndexedStack(index: _i, children: pages),
+          resizeToAvoidBottomInset: false,
+          body: pages[_i],
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
               color: Colors.white,
