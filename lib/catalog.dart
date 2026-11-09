@@ -26,7 +26,7 @@ const _ca = [
   [120.0, 130.0],
 ];
 
-List<Talla> _tallas(Tipo t) => List.generate(6, (i) {
+List<Talla> tallasEstandar(Tipo t) => List.generate(6, (i) {
       switch (t) {
         case Tipo.remera:
           return Talla(_n[i], _pe[i][0], _pe[i][1], largo: 62.0 + i * 3);
@@ -56,7 +56,7 @@ Producto _p(int id, String marca, String nombre, Tipo tipo, Corte corte,
       tipo: tipo,
       corte: corte,
       color: color,
-      tallas: _tallas(tipo),
+      tallas: tallasEstandar(tipo),
     );
 
 // Datos de demostración: marcas, modelos y precios son ilustrativos.

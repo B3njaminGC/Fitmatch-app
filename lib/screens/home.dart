@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../catalog.dart';
 import '../fit.dart';
 import '../models.dart';
 import '../state.dart';
@@ -18,7 +17,7 @@ List<Producto> ordenadoParaPerfil(Perfil p, [Tipo? tipo]) {
     };
   }
 
-  final l = catalogo.where((x) => tipo == null || x.tipo == tipo).toList();
+  final l = appState.productos.where((x) => tipo == null || x.tipo == tipo).toList();
   l.sort((a, b) => score(a).compareTo(score(b)));
   return l;
 }
@@ -110,6 +109,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
             ),
           ),
+          if (items.isEmpty)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Text(
+                    'No hay prendas para mostrar.\nAgregalas desde Perfil → Mis prendas.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Color(0xFF6B6F76), height: 1.4)),
+              ),
+            ),
           ProductGrid(items, onOpen: (x) => abrirDetalle(context, x)),
         ],
       ),

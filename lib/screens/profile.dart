@@ -4,6 +4,7 @@ import '../models.dart';
 import '../state.dart';
 import '../tips.dart';
 import '../widgets.dart';
+import 'mis_prendas.dart';
 
 class PerfilScreen extends StatefulWidget {
   const PerfilScreen({super.key});
@@ -75,6 +76,19 @@ class _PerfilScreenState extends State<PerfilScreen> {
           s('Cadera', 'cm', _p.cadera, 70, 150, (x) => _p.copyWith(cadera: x)),
           s('Entrepierna', 'cm', _p.entrepierna, 55, 100,
               (x) => _p.copyWith(entrepierna: x)),
+          Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            decoration: tarjeta(),
+            child: ListTile(
+              leading: const Icon(Icons.checkroom, color: kMoradoOscuro),
+              title: const Text('Mis prendas',
+                  style: TextStyle(fontWeight: FontWeight.w600)),
+              subtitle: const Text('Cargá tus propias prendas y sus talles'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const MisPrendasScreen())),
+            ),
+          ),
           const SizedBox(height: 6),
           SizedBox(
             height: 52,

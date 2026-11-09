@@ -3,12 +3,19 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'catalog.dart';
 import 'models.dart';
 
 class AppState extends ChangeNotifier {
   Perfil? perfil;
   final Set<int> favoritos = {};
+  final List<Producto> propios = [];
+  bool mostrarEjemplos = true;
   SharedPreferences? _prefs;
+
+  /// Todo lo que se muestra en la tienda: ejemplos (opcional) + prendas propias.
+  List<Producto> get productos =>
+      [if (mostrarEjemplos) ...catalogo, ...propios];
 
   Future<void> load() async {
     _prefs = await SharedPreferences.getInstance();
@@ -21,6 +28,12 @@ class AppState extends ChangeNotifier {
       }
     }
     favoritos.addAll((_prefs!.getStringList('favs') ?? []).map(int.parse));
+    mostrarEjemplos = _prefs!.getBool('ejemplos') ?? true;
+    for (final r in _prefs!.getStringList('propios') ?? <String>[]) {
+      try {
+        propios.add(Producto.fromJson(jsonDecode(r) as Map<String, dynamic>));
+      } catch (_) {}
+    }
   }
 
   Future<void> guardarPerfil(Perfil p) async {
@@ -29,10 +42,44 @@ class AppState extends ChangeNotifier {
     await _prefs?.setString('perfil', jsonEncode(p.toJson()));
   }
 
+  void _guardarFavs() {
+    _prefs?.setStringList('favs', favoritos.map((e) => e.toString()).toList());
+  }
+
+  void _guardarPropios() {
+    _prefs?.setStringList(
+        'propios', propios.map((p) => jsonEncode(p.toJson())).toList());
+  }
+
   void toggleFav(int id) {
     if (!favoritos.remove(id)) favoritos.add(id);
     notifyListeners();
-    _prefs?.setStringList('favs', favoritos.map((e) => e.toString()).toList());
+    _guardarFavs();
+  }
+
+  void guardarProducto(Producto p) {
+    final i = propios.indexWhere((x) => x.id == p.id);
+    if (i >= 0) {
+      propios[i] = p;
+    } else {
+      propios.add(p);
+    }
+    _guardarPropios();
+    notifyListeners();
+  }
+
+  void borrarProducto(int id) {
+    propios.removeWhere((x) => x.id == id);
+    favoritos.remove(id);
+    _guardarPropios();
+    _guardarFavs();
+    notifyListeners();
+  }
+
+  void setEjemplos(bool v) {
+    mostrarEjemplos = v;
+    _prefs?.setBool('ejemplos', v);
+    notifyListeners();
   }
 }
 

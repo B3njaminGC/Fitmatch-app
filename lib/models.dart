@@ -146,6 +146,28 @@ class Talla {
     this.cadHi,
     required this.largo,
   });
+
+  Map<String, dynamic> toJson() => {
+        'n': nombre,
+        'lo': lo,
+        'hi': hi,
+        'cinLo': cinLo,
+        'cinHi': cinHi,
+        'cadLo': cadLo,
+        'cadHi': cadHi,
+        'largo': largo,
+      };
+
+  factory Talla.fromJson(Map<String, dynamic> j) => Talla(
+        j['n'] as String,
+        (j['lo'] as num).toDouble(),
+        (j['hi'] as num).toDouble(),
+        cinLo: (j['cinLo'] as num?)?.toDouble(),
+        cinHi: (j['cinHi'] as num?)?.toDouble(),
+        cadLo: (j['cadLo'] as num?)?.toDouble(),
+        cadHi: (j['cadHi'] as num?)?.toDouble(),
+        largo: (j['largo'] as num).toDouble(),
+      );
 }
 
 class Producto {
@@ -155,6 +177,9 @@ class Producto {
   final Corte corte;
   final int color;
   final List<Talla> tallas;
+
+  /// true si la cargó el usuario desde la app (se puede editar y borrar).
+  final bool propio;
 
   const Producto({
     required this.id,
@@ -166,5 +191,33 @@ class Producto {
     required this.corte,
     required this.color,
     required this.tallas,
+    this.propio = false,
   });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'marca': marca,
+        'nombre': nombre,
+        'precio': precio,
+        'desc': desc,
+        'tipo': tipo.name,
+        'corte': corte.name,
+        'color': color,
+        'tallas': tallas.map((t) => t.toJson()).toList(),
+      };
+
+  factory Producto.fromJson(Map<String, dynamic> j) => Producto(
+        id: (j['id'] as num).toInt(),
+        marca: j['marca'] as String,
+        nombre: j['nombre'] as String,
+        precio: j['precio'] as String,
+        desc: (j['desc'] ?? '') as String,
+        tipo: Tipo.values.byName(j['tipo'] as String),
+        corte: Corte.values.byName(j['corte'] as String),
+        color: (j['color'] as num).toInt(),
+        tallas: (j['tallas'] as List)
+            .map((e) => Talla.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        propio: true,
+      );
 }

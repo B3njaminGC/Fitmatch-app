@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../catalog.dart';
+import '../state.dart';
 import '../models.dart';
 import '../widgets.dart';
 import 'home.dart';
@@ -25,7 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final q = _q.text.trim().toLowerCase();
-    final items = catalogo.where((x) {
+    final items = appState.productos.where((x) {
       if (_tipo != null && x.tipo != _tipo) return false;
       if (q.isEmpty) return true;
       return x.nombre.toLowerCase().contains(q) ||

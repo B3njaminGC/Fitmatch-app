@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../catalog.dart';
 import '../state.dart';
 import '../widgets.dart';
 import 'home.dart';
@@ -19,7 +18,7 @@ class _ShellState extends State<Shell> {
 
   Widget _guardados() {
     final items =
-        catalogo.where((x) => appState.favoritos.contains(x.id)).toList();
+        appState.productos.where((x) => appState.favoritos.contains(x.id)).toList();
     return SafeArea(
       bottom: false,
       child: CustomScrollView(

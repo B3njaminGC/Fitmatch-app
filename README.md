@@ -18,6 +18,7 @@ según tus medidas y podés ver cómo te quedan en un maniquí gris hecho a tu m
 ```
 flutter create --platforms=android --project-name fitmatch_app .
 flutter pub get
+dart run flutter_launcher_icons
 flutter build apk --release
 ```
 
@@ -45,6 +46,7 @@ Cada compilación deja el APK en la sección **Releases** del repo: lo descargá
 - **Probador**: maniquí gris con tus proporciones, la prenda encima, giro con el dedo, cambio de talle en vivo.
 - **Para vos**: consejos según contextura y estatura.
 - **Perfil**: editás tus medidas cuando quieras.
+- **Mis prendas** (Perfil → Mis prendas): cargás tus propias prendas con marca, precio, corte, color y tabla de talles. Se guardan en el teléfono.
 
 ## Veredicto
 
@@ -62,6 +64,7 @@ lib/
   fit.dart         lógica del veredicto y talle sugerido
   mannequin.dart   maniquí 3D falso (CustomPainter con rotación)
   tips.dart        consejos "Para vos"
+  assets/icon/     ícono de la app (se aplica con flutter_launcher_icons)
   state.dart       estado + guardado local
   widgets.dart     tarjetas, sliders, badges
   screens/         onboarding, shell (barra inferior), home, search, detail, tryon, profile
