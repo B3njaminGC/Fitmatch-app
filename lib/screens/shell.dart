@@ -108,6 +108,7 @@ class _ShellState extends State<Shell> {
                     _item(1, Icons.favorite_border, Icons.favorite, 'Guardados'),
                     Expanded(
                       child: Center(
+                        heightFactor: 1,
                         child: GestureDetector(
                           onTap: () => setState(() => _i = 2),
                           child: Container(
